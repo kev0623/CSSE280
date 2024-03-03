@@ -18,6 +18,7 @@
                 font-size: 2em;
             }
         </style>
+
     </head>
     
     <body>
@@ -35,6 +36,15 @@
         <p class="test-class" style="font-size: 2em;">This is an example of inline css, The p tag will have margin and the display property is "block"</p>
         <button id="myButton">Press Me!</button>
         <div>Nothing happen for the button until we add javascript code</div>
+        <script>
+            console.log("Hello World");
+            var buttonEL = document.querySelector("#myButton");
+            buttonEL.onclick = (event) => {
+                console.log(event);
+                alert("This is important")
+            }
+
+        </script>
     </body>
 
 
