@@ -2,6 +2,22 @@
 <html>
     <head>
         <title>Hello World</title>
+        <style>
+            div {
+                border: blue 5px;
+                /* border-width: 20; */
+
+
+            }
+            .test-class{
+                color: red;
+                font-weight: bold;
+            }
+            #myButton{
+                padding: 30px;
+                font-size: 2em;
+            }
+        </style>
     </head>
     
     <body>
@@ -13,11 +29,11 @@
         <br>
         <br>
         <span>The span tag is the next most popular</span>
-        <span>A span shares the line</span>
+        <span class="test-class">A span shares the line</span>
         <span>because the display property is "inline"</span>
         <p>But with CSS you can do anything</p>
-        <p>The p tag will have margin and the display property is "block"</p>
-        <button>Press Me!</button>
+        <p class="test-class" style="font-size: 2em;">This is an example of inline css, The p tag will have margin and the display property is "block"</p>
+        <button id="myButton">Press Me!</button>
         <div>Nothing happen for the button until we add javascript code</div>
     </body>
 
