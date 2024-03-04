@@ -8,12 +8,14 @@ body{
 .button-group>button{
     font-size: 1.5em;
     padding: 10px;
-    margin: 10px;
+    margin: 0 10px;
 }
 div:nth-child(2){
     color: white;
     text-align: center;
-    font-size: 4em;
+    /* font-family: Consolas,Arial, Helvetica, sans-serif;
+    font-size: 4em; */
+    font: 4em Consolas,Arial, Helvetica, sans-serif;
 }
 
 /* button{
