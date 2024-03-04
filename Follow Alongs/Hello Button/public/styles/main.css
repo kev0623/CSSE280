@@ -9,5 +9,16 @@ body{
     font-size: 1.5em;
     padding: 10px;
     margin: 10px;
-    
 }
+div:nth-child(2){
+    color: white;
+    text-align: center;
+    font-size: 4em;
+}
+
+/* button{
+    font-size: 0.2em;
+}
+#decButton{
+    font-size: 0.2em;
+} */
