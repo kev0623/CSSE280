@@ -3,34 +3,56 @@
  * Provides the JavaScript interactions for all pages.
  *
  * @author 
- * PUT_YOUR_NAME_HERE
+ * Kai Chun Lin
  */
 
 /** namespace. */
 var rhit = rhit || {};
 
 /** globals */
-rhit.variableName = "";
+rhit.counter = 0;
 
 /** function and class syntax examples */
-rhit.functionName = function () {
-	/** function body */
+rhit.updateCounter = function () {
+
+
 };
 
-rhit.ClassName = class {
-	constructor() {
+// rhit.ClassName = class {
+// 	constructor() {
 
-	}
+// 	}
 
-	methodName() {
+// 	methodName() {
 
-	}
-}
+// 	}
+// }
 
 /* Main */
 /** function and class syntax examples */
 rhit.main = function () {
 	console.log("Ready");
+	const buttons = document.querySelectorAll("#counterButton button");
+	// for(let i=0;i<buttons.length;i++){
+	// 	const button = buttons[i];
+	// 	// const button = buttons[i];
+	// 	// const button = buttons[i];
+	// 	// const button = buttons[i];
+	// 	button.onclick = (event) => {
+	// 		console.log(`You pressed:`, button);
+	// 	}
+	// }
+	for(const button of buttons){
+		button.onclick = (event) => {
+			console.log(`You pressed: `, button);
+		}
+	}
+
+	// buttons.forEach((button) => {
+	// 	button.onclick = (event) => {
+	// 		console.log(`You pressed: `, button);
+	// 	}
+	// });
 };
 
 rhit.main();
