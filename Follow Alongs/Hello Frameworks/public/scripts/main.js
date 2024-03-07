@@ -44,8 +44,12 @@ rhit.main = function () {
 	// }
 	for(const button of buttons){
 		button.onclick = (event) => {
-			console.log(`You pressed: `, button);
+		const dataAmount = parseInt(button.dataset.amount);
+		const dataIsMultiplication = button.dataset.isMultiplication=="true";
+		console.log(`Amount: ${dataAmount}`);
+		console.log(`Is mut: ${dataIsMultiplication}`);
 		}
+
 	}
 
 	// buttons.forEach((button) => {
