@@ -13,10 +13,7 @@ var rhit = rhit || {};
 rhit.counter = 0;
 
 /** function and class syntax examples */
-rhit.updateCounter = function () {
 
-
-};
 
 // rhit.ClassName = class {
 // 	constructor() {
@@ -48,8 +45,9 @@ rhit.main = function () {
 		const dataIsMultiplication = button.dataset.isMultiplication=="true";
 		console.log(`Amount: ${dataAmount}`);
 		console.log(`Is mut: ${dataIsMultiplication}`);
+		rhit.updateCounter(dataAmount,dataIsMultiplication);
 		}
-
+		
 	}
 
 	// buttons.forEach((button) => {
@@ -59,4 +57,13 @@ rhit.main = function () {
 	// });
 };
 
+
+rhit.updateCounter = function (amount, isMultiplication) {
+	if(isMultiplication){
+		rhit.counter = rhit.counter*amount;
+	}else{
+		rhit.counter+=amount;
+	}
+	document.querySelector("#counter-text").innerHTML=`Count = ${rhit.counter}`;
+};
 rhit.main();
