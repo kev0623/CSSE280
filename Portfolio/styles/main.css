@@ -1,0 +1,12 @@
+body{
+    padding-left: 4em;
+    font-size: 18px;
+    line-height: 1.5;
+    font-weight: bold;
+}
+p{
+    max-width: 50em;
+}
+h1,h2,h3{
+    line-height: 1.2;
+}
