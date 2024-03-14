@@ -19,15 +19,35 @@
     <nav class="navbar navbar-dark fixed-top">
       <a class="navbar-brand" href="#">Tic-Tae-Toe</a>
     </nav>
-    <div id="mainPage" class="container page-container">
+    <div id="mainPage" class="page-container">
       <h1 id="gameStateText" class="text-center">X's Turn</h1>
 
-      <div class="row justify-content-center">
+        <div id="gameBoard" class="mx-auto">
+          <div class="my-row b-bottom">
+            <div class=" square b-right"></div>
+            <div class=" square b-left b-right"></div>
+            <div class=" square b-left">X</div>
+          </div>
+          <div class="my-row b-bottom b-top">
+            <div class="square b-right">X</div>
+            <div class="square b-right b-left">X</div>
+            <div class="square b-left">X</div>
+          </div>
+          <div class="my-row b-top">
+            <div class="square b-right">X</div>
+            <div class="square b-right b-left">X</div>
+            <div class="square b-left">X</div>
+          </div>
+          <div class="">
+            <button type="button"class="btn" id="newGameButton">New Game</button>
+          </div>
+        </div>
+      <!-- <div class="row justify-content-center">
         <div id="gameBoard" class="col-10 col-md-6">
           <div class="row b-bottom">
-            <div class="col square b-right">X</div>
-            <div class="col square b-right b-left">X</div>
-            <div class="col square b-left">X</div>
+            <div class="col square b-right">&nbsp;</div>
+            <div class="col square b-right b-left">&nbsp</div>
+            <div class="col square b-left">&nbsp</div>
           </div>
           <div class="row b-bottom b-top">
             <div class="col square b-right">X</div>
@@ -43,7 +63,7 @@
             <button type="button"class="btn" id="newGameButton">New Game</button>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
     <script src="scripts/jquery.min.js"></script>
     <script src="scripts/popper.js"></script>

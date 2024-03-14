@@ -18,6 +18,7 @@ body {
     line-height: 100px;
     font-size: 60px;
     font-weight: 500;
+    flex: 1 0 0;
 }
 
 .b-top {
@@ -40,4 +41,13 @@ body {
     color: white;
     margin-top: 15px;
     margin-left: auto;    
+}
+
+.my-row{
+    display: flex;
+    direction: row;
+}
+#gameBoard{
+    height: 300px;
+    width: 300px;
 }
