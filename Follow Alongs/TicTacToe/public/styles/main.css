@@ -41,6 +41,7 @@ body {
     color: white;
     margin-top: 15px;
     margin-left: auto;    
+    
 }
 
 .my-row{
@@ -50,4 +51,7 @@ body {
 #gameBoard{
     height: 300px;
     width: 300px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr ;
+    grid-template-rows: 33% 33% 33% ;
 }
