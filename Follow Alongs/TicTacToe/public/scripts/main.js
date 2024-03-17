@@ -9,28 +9,39 @@
 /** namespace. */
 var rhit = rhit || {};
 
-/** globals */
-rhit.variableName = "";
 
-/** function and class syntax examples */
-rhit.functionName = function () {
-	/** function body */
-};
-
-rhit.ClassName = class {
+rhit.PageController = class {
 	constructor() {
-
+		
 	}
 
-	methodName() {
+	updateView() {
 
 	}
+};
+//Semicolon is not neccessary 
+rhit.Game = class {
+	constructor() {
+		//TODO: Make instance variables
+	}
+
+	pressedButtonAtIndex(buttonIndex) {
+
+	}
+	getMarkAtIndex(buttonIndex){
+		return "X";
+	}
+	getState(){
+		return "X's Turn";
+	}
+
 }
-
 /* Main */
 /** function and class syntax examples */
 rhit.main = function () {
 	console.log("Ready");
+	new rhit.PageController();
+
 };
 
 rhit.main();
