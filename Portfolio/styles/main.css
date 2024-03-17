@@ -1,12 +1,66 @@
-body{
-    padding-left: 4em;
-    font-size: 18px;
-    line-height: 1.5;
-    font-weight: bold;
-}
-p{
-    max-width: 50em;
-}
-h1,h2,h3{
-    line-height: 1.2;
-}
+/* Reset default browser styles */
+body, h1, h2, h3, p, ul, li, footer {
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  nav ul {
+    list-style: none;
+  }
+  
+  nav ul li {
+    display: inline;
+    margin-right: 20px;
+  }
+  
+  nav ul li a {
+    color: #333;
+    text-decoration: none;
+  }
+  
+  nav ul li a:hover {
+    color: #ffc107; /* Change to your preferred highlight color */
+  }
+  
+  main {
+    padding: 20px;
+  }
+  
+  h1 {
+    color: #333;
+    text-align: center;
+  }
+  
+  img {
+    display: block;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+  }
+  
+  p {
+    margin-bottom: 20px;
+  }
+  
+  footer {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    text-align: center;
+  }
+  
+  footer a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  footer a:hover {
+    color: #ffc107; /* Change to your preferred highlight color */
+  }
+  

@@ -1,0 +1,77 @@
+/* Reset default browser styles */
+body, h1, h2, h3, p, ul, li, dl, dt, dd, footer {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+}
+
+nav ul {
+  list-style: none;
+}
+
+nav ul li {
+  display: inline;
+  margin-right: 20px;
+}
+
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+  color: #ffc107; /* Change to your preferred highlight color */
+}
+
+main {
+  padding: 20px;
+}
+
+h1, h2, h3 {
+  color: #333;
+}
+
+section {
+  margin-bottom: 30px;
+}
+
+dl {
+  margin-left: 20px;
+}
+
+dt {
+  font-weight: bold;
+}
+
+footer {
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  text-align: center;
+}
+
+footer a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: #ffc107; /* Change to your preferred highlight color */
+}
+
