@@ -1,0 +1,45 @@
+body {
+    background: #DDDDDD;
+}
+
+.navbar {
+    background-color: #800000;
+    color: white;
+}
+
+.page-container {
+    margin-top: 50px;
+}
+.counter-button{
+    background-color: #800000;
+    color: white;
+}
+.favorite-number-button{
+    width: 100px;
+    margin: 10px;
+}
+.container {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+  }
+.favorite-color-button{
+    width: 100px;
+    margin: 40px 5px; /* Adjust the margin as needed */
+}
+#color-rectangle{
+    width: 200px;
+    margin: 20px;
+    background-color: #800000 ;
+    line-height: 100px;
+    text-align: center;
+    color: white;
+}
+#favorite-color-container{
+    text-align: center;
+}
+#Purple{
+    background-color: purple;
+    color: white;
+}
