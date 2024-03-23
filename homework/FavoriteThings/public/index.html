@@ -13,12 +13,14 @@
     <div id="main-page" class="container page-container">
       <hr />
       <h1>Favorite Number:</h1>
+      <div id="favoriteNumber" class="text-center">0</div>
       <div id="favorite-number-container" class="mx-auto text-center">
         <div class="row">
             <div class="">
               <button
                 type="button"
-                class="btn counter-button mb-2 favorite-number-button"
+                class="btn counter-button mb-2 favorite-number-button "
+                id="decButton"
               >
                 -1
               </button>
@@ -27,6 +29,7 @@
               <button
                 type="button"
                 class="btn counter-button mb-2 favorite-number-button"
+                id="resetButton"
               >
                 Reset
               </button>
@@ -35,6 +38,7 @@
               <button
                 type="button"
                 class="btn counter-button mb-2 favorite-number-button"
+                id="addButton"
               >
                 +1
               </button>
@@ -48,16 +52,19 @@
       <h1>Favorite Color:</h1>
       <div id="favorite-color-container " class="mx-auto text-center">
         <div class="container">
-            <div id="color-rectangle" >#800000</div>
+            <div id="colorRectangle" >#800000</div>
+        </div>
+        <div class="row no-gutters">
+        <button id="blueButton" type="button" class="btn  favorite-color-button">Blue</button>
+        <button id="greenButton" type="button" class="btn  favorite-color-button">Green</button>
+        <button id="redButton" type="button" class="btn  favorite-color-button">Red</button>
+        <button id="purpleButton" type="button" class="btn favorite-color-button" >Purple</button>
         </div>
         
-        <button type="button" class="btn btn-primary favorite-color-button">Blue</button>
-        <button type="button" class="btn btn-success favorite-color-button">Green</button>
-        <button type="button" class="btn btn-danger favorite-color-button">Red</button>
-        <button type="button" class="btn favorite-color-button" id="Purple">Purple</button>
       </div>
 
       <hr />
     </div>
+    <script src="scripts/main.js"></script>
   </body>
 </html>

@@ -18,6 +18,10 @@ body {
     width: 100px;
     margin: 10px;
 }
+#favoriteNumber{
+    font-size: 30px;
+    font-weight: bold;
+}
 .container {
     display: grid;
     justify-content: center;
@@ -28,7 +32,19 @@ body {
     width: 100px;
     margin: 40px 5px; /* Adjust the margin as needed */
 }
-#color-rectangle{
+#blueButton{
+    background-color: blue;
+    color: white;
+}
+#greenButton{
+    background-color: green;
+    color: white;
+}
+#redButton{
+    background-color: red;
+    color: white;
+}
+#colorRectangle{
     width: 200px;
     margin: 20px;
     background-color: #800000 ;
@@ -39,7 +55,7 @@ body {
 #favorite-color-container{
     text-align: center;
 }
-#Purple{
+#purpleButton{
     background-color: purple;
     color: white;
 }
