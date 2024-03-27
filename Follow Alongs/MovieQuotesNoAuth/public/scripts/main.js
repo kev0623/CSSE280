@@ -32,9 +32,19 @@ rhit.ClassName = class {
 rhit.main = function () {
 	console.log("Ready");
 
+	// const ref = firebase.firestore().collection("MovieQuotes");
+	// ref.onSnapshot((querySnapshot) => {
+	// 	querySnapshot.forEach((doc) => {
+	// 		console.log(doc.data());
+	// 	});
 
 
-	
+
+	// });
+	// ref.add({
+	// 	quote: "I have a bad feeling about this",
+	// 	movie: "Star Wars",
+	// 	lasttouch: firebase.firestore.Timestamp.now()
+	// });
 };
-
 rhit.main();
