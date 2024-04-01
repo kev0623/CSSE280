@@ -17,6 +17,14 @@ rh.KEY_LAST_TOUCHED = "lastTouched";
 rh.fbMovieQuotesManager = null;
 rh.fbSingleMovieQuoteManager = null;
 
+$('#addQuoteDialog').on('show.bs.modal', (event) => {
+	$("#inputQuote").val("");
+	$("#inputMovie").val(""); 
+});
+$('#addQuoteDialog').on('shown.bs.modal', (event)=>{
+	document.getElementById("inputQuote").focus();
+});
+
 rh.MovieQuote = class {
 	constructor(id, quote, movie) {
 		this.id = id;
