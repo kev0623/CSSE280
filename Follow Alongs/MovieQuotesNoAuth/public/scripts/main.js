@@ -8,6 +8,9 @@
 /** namespace. */
 var rh = rh || {};
 
+
+
+
 /** globals */
 rh.COLLECTION_MOVIEQUOTES = "MovieQuotes";
 rh.KEY_QUOTE = "quote";
