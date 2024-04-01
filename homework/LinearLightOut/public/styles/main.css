@@ -10,52 +10,64 @@ body {
 .page-container {
     margin-top: 50px;
 }
-h1{
+
+#gameStateText {
     text-align: center;
+    font-weight: bold;
     margin-top: 80px;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
+    font-size: 30px;
 }
+
 #gameBoard>button {
-    width: 20px; /* Adjust width as needed */
-    height: 40px; /* Adjust height as needed */
-    font-size: 24px; /* Adjust font size as needed */
-    background-color: yellow;
-  }
-
- @media (max-width: 992px) { 
-    h1 {
-        font-size: 200%;
-
-    }
-    #gameBoard>button {
-        width: 40px; /* Adjust width as needed */
-        height: 80px; /* Adjust height as needed */
-        font-size: 36px; /* Adjust font size as needed */
-        background-color: yellow;
-      }
- }
- @media (max-width: 576px) { 
-    h1 {
-        font-size: 150%;
-        text-align: center;
-    }
-    #gameBoard>button {
-        width: 30px; /* Adjust width as needed */
-        height: 60px; /* Adjust height as needed */
-        font-size: 24px; /* Adjust font size as needed */
-        background-color: yellow;
-      }
- }
+    color: white;
+    margin-left: auto;
+    margin-top: 25px;
+    font-size: 30px; /* Set base font size */
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
 #newGameButton {
     margin-top: 15px;
     background: #800000;
     color: white;
     margin-left: 175px;
+    border: none;
+    outline: none;
 }
+@media (min-width: 992px) {
+    h1 {
+        font-size: 60px; /* Increase font size */
+    }
+
+    #gameBoard>button {
+        font-size: 50px; /* Increase font size */
+    }
+    #newGameButton {
+        font-size: 10px;
+    }
+}
+
+
+@media (min-width: 576px) {
+
+    #gameBoard>button {
+        font-size: 40px; /* Increase font size */
+    }
+
+    #gameStateText {
+        font-size: 40px; /* Increase font size */
+    }
+    #newGameButton {
+        font-size: 20px;
+    }
+}
+
+
+
 .container {
-    /* display: flex; */
     justify-content: center;
     gap: 5px;
-    margin-top: 40px; 
-    /* Adjust as needed */
-  }
+    margin-top: 40px;
+}
