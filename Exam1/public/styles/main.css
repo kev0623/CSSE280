@@ -1,0 +1,77 @@
+body {
+    background: #DDDDDD;
+}
+
+.navbar {
+    background-color: #800000;
+    color: white;
+}
+
+.container {
+    margin-top: 75px;
+}
+.tv {
+    border: 0.5em solid black;
+    padding: 0;
+    margin: 0;
+}
+
+.remote {
+    background-color: #eee;
+    padding: 20px;
+    padding-bottom: 30px;
+}
+
+ .remote button {
+    margin: .25em 0;    
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    background-color: white;
+    border: 3px solid black;
+    padding: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    
+    font-size: calc(5px + 1vw);
+   
+}
+#channelNumber{
+    text-align: center;
+    font-weight: bold;
+}
+@media (min-width: 992px) {
+    .tv-container {
+        float: left;
+        width: 70%; 
+    }
+    
+    .remote-container {
+        float: left;
+        width: 30%; 
+        margin-left: 0; 
+    }
+
+    .remote {
+        height: 100%;
+    }
+
+    .remote button {
+        margin: .25em 0;    
+        width: 100%;
+        text-align: center;
+        font-weight: bold;
+        background-color: white;
+        border: 3px solid black;
+        padding: 10px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    
+        /* Responsive font size */
+        font-size: calc( 1vw);
+       
+    }
+}
+
+

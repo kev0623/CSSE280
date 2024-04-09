@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"
+    />
+    <link rel="stylesheet" href="styles/bootstrap-material-design.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+    <title>Television & Remote Control</title>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-dark fixed-top">
+      <a class="navbar-brand" href="#">Television & Remote Control</a>
+    </nav>
+
+    <div class="container">
+      <div class="row">
+        <div  class="col-12 col-md-6 col-lg-9 my-3">
+          <div class="tv">
+            <img
+              id="televisionImage"
+              src="images/tv_1.jpeg"
+              style="max-width: 100%; min-width: 100%"
+            />
+          </div>
+        </div>
+        <div class="col-12 col-md-5 offset-md-1 col-lg-2 offset-lg-1 my-3">
+          <div class="remote">
+            <h2 id="channelNumber">Ch. 1</h2>
+            <button data-direction="up">Channel Up</button>
+            <button data-direction="down">Channel Down</button>
+            <button data-direction="pause">Screensaver</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/popper.js"></script>
+    <script src="scripts/bootstrap-material-design.js"></script>
+    <script>
+      $("body").bootstrapMaterialDesign();
+    </script>
+    <script src="/__/firebase/7.18.0/firebase-app.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-analytics.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-auth.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-firestore.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script src="scripts/main.js"></script>
+  </body>
+</html>
