@@ -5,7 +5,7 @@ body{
     text-align: center;
     padding: 20vw;
 }
-.button-group>button{
+.button-group button{
     font-size: 1.5em;
     padding: 10px;
     margin: 0 10px;

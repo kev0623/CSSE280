@@ -7,5 +7,14 @@ html
             button#decButton Decrement
             button#resetButton Reset
             button#incButton Increment
+            hr
+            form(action= '/pug/hello', method='POST',onSubmit='saveCurrentCounter')
+                input(id='saveCounter' type='hidden' name='count' value="")
+                button(type='submit') Save
         div#countText Count= #{count}
         script(src="/static/scripts/main.js")
+        script(type="text/javascript").
+            counter= #{count}
+            function saveCurrnetValue(){
+                document.querySelector("#saveCounter").value = counter;
+            }
