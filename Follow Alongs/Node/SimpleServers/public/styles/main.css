@@ -1,0 +1,26 @@
+body{
+    background-color: #800000;
+}
+.button-group{
+    text-align: center;
+    padding: 20vw;
+}
+.button-group>button{
+    font-size: 1.5em;
+    padding: 10px;
+    margin: 0 10px;
+}
+div:nth-child(2){
+    color: white;
+    text-align: center;
+    /* font-family: Consolas,Arial, Helvetica, sans-serif;
+    font-size: 4em; */
+    font: 4em Consolas,Arial, Helvetica, sans-serif;
+}
+
+/* button{
+    font-size: 0.2em;
+}
+#decButton{
+    font-size: 0.2em;
+} */
