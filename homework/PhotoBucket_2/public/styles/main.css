@@ -1,14 +1,16 @@
-
 body {
     background: #DDDDDD;
 }
+
 .navbar {
     background-color: #800000;
     color: white;
 }
+
 .page-container {
     margin-top: 75px;
 }
+
 #columns {
     column-count: 3;
     column-gap: 5px;
@@ -46,16 +48,21 @@ body {
     max-height: 18px;
     overflow: hidden;
 }
+
 #fab {
-    background: #800000;
-    bottom: 10px;
+    background-color: #800000;
+    bottom:10px;
     color: white;
-    position: fixed;
-    right: 10px;
-    z-index: 999;
+    position:fixed;
+    right:10px;
+    z-index:999;
 }
 
 #fab:active {
+    transform: translatey(2px);
     opacity: 0.8;
-    transform: translateY(2px);
+}
+
+.dropdown-menu-right {
+    left: -128px;
 }
