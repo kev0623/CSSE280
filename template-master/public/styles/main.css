@@ -1,0 +1,30 @@
+
+body {
+    background: #DDDDDD;
+}
+.navbar {
+    background-color: #800000;
+    color: white;
+}
+.page-container {
+    margin-top: 75px;
+}
+.buttons button {
+    width: 100%;
+    padding: 20px;
+    margin: 0;
+    font-size: 1em;
+}
+
+@media (min-width: 576px) {
+    .buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        /* gap: 10px; */
+    }
+
+    .buttons button {
+        width: auto;
+        /* padding: 20px; */
+    }
+}
