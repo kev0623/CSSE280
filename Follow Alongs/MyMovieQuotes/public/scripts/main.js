@@ -273,7 +273,7 @@ rhit.FbAuthManager = class {
 		console.log("Sign in using Rosefire");
 		// Please note this needs to be the result of a user interaction
 		// (like a button click) otherwise it will get blocked as a popup
-		Rosefire.signIn("5757b144-c538-4a78-a066-a2cde9f7d30b", (err, rfUser) => {
+		Rosefire.signIn("ab7efe8e-8554-485f-8db2-743397878f02", (err, rfUser) => {
 			if (err) {
 	  			console.log("Rosefire error!", err);
 	  		return;
