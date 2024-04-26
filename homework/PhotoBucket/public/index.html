@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 
@@ -7,83 +8,45 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
   <link rel="stylesheet" href="styles/bootstrap-material-design.min.css">
   <link rel="stylesheet" href="styles/main.css">
-  <title>My Photo Bucket</title>
+  <title>Photo Bucket</title>
 </head>
 
 <body>
-  <div class="bmd-layout-container bmd-drawer-f-l bmd-drawer-overlay">
-    <header class="bmd-layout-header">
-      <div class="navbar navbar-dark bg-faded fixed-top justify-content-start">
-        <button class="navbar-toggler" type="button" data-toggle="drawer" data-target="#dw-s2" aria-expanded="false">
-          <span class="sr-only">Toggle drawer</span>
-          <i class="material-icons">menu</i>
-        </button>
-        <a class="navbar-brand" href="#">&nbsp; &nbsp; My Photo Bucket</a>
-      </div>
-    </header>
-    <div id="dw-s2" class="bmd-layout-drawer bg-faded">
-      <header>
-        <a class="navbar-brand">My Photo Buckets</a>
-      </header>
-      <ul class="list-group">
-        <a id = "menuShowAllPhotos" class="list-group-item"><i class="material-icons">people</i>Show All Photos</a>
-        <a id = "menuShowMyPhotos" class="list-group-item"><i class="material-icons">person</i>Show My Photos</a>
-        <a id = "menuSignOut" class="list-group-item"><i class="material-icons">login</i>Sign Out</a>
-      </ul>
+  <nav class="navbar navbar-dark fixed-top">
+    <a class="navbar-brand" href="#">Photo Bucket</a>
+  </nav>
+  <div id="listPage" class="container page-container">
+    <div id="columns">
+      
     </div>
-    <main class="bmd-layout-content">
-      <div id="listPage" class="container page-container">
-        <div id="columns"></div>
-      </div>
-    </main>
-     
   </div>
-
-
-    <button id = "fab" type="button" class="btn btn-info bmd-btn-fab " data-toggle="modal" data-target="#addPhoto">
-      <i class = "material-icons">add</i>
-    </button>
-    
-
-    
-    <!-- Modal -->
-    <div class="modal fade" id="addPhoto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Add Photo</h5>
+  <button id="fab" type="button" class="btn bmd-btn-fab" data-toggle="modal" data-target="#addPhotoDialog">
+    <i class="material-icons">add</i>
+  </button>
+  <div class="modal fade" id="addPhotoDialog" tabindex="-1" role="dialog" aria-labelledby="Add Photo Dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add a photo</h5>
+        </div>
+        <div class="modal-body">
+          <div>Image:</div>
+          <div class="form-group bmd-form-group">
+            <label for="#inputImageURL" class="bmd-label-floating">URL to existing image</label>
+            <input type="text" class="form-control" id="inputImageURL">
           </div>
-          <div class="modal-body">
-            
-              <div class="form-group bmd-form-group">
-                <label for="inputUrl">Photo Url</label>
-                <input type="text" class="form-control" id="inputPhoto">
-              </div>
-              <div class="form-group bmd-form-group">
-                <label for="inputCaption">Caption</label>
-                <input type="text" class="form-control" id="inputCaption">
-                <span class="bmd-help"> What caption would fit this photo?</span>
-              </div>
-
+          <div>Caption:</div>
+          <div class="form-group bmd-form-group">
+            <label for="#inputCaption" class="bmd-label-floating">Image related text</label>
+            <input type="text" class="form-control" id="inputCaption">
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
-            <button id="submit" type="button" class="btn btn-primary" data-dismiss="modal">CREATE</button>
-          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+          <button id="submitAddPhoto" type="button" class="btn btn-primary" data-dismiss="modal">CREATE</button>
         </div>
       </div>
     </div>
-
-
-
-
-
-
-
-
-
-    
-
   </div>
   <script src="scripts/jquery.min.js"></script>
   <script src="scripts/popper.js"></script>
@@ -95,6 +58,7 @@
   <script src="/__/firebase/7.18.0/firebase-firestore.js"></script>
   <script src="/__/firebase/init.js"></script>
   <script src="scripts/main.js"></script>
+  
 </body>
 
 </html>
