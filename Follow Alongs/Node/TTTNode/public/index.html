@@ -1,150 +1,88 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"
-    />
-    <link rel="stylesheet" href="styles/bootstrap-material-design.min.css" />
-    <link rel="stylesheet" href="styles/main.css" />
-    <title>Tic-Tae-Toe</title>
-  </head>
 
-  <body>
-    <nav class="navbar navbar-dark fixed-top">
-      <a class="navbar-brand" href="#">Tic-Tae-Toe</a>
-    </nav>
-    <div id="mainPage" class="page-container">
-      <h1 id="gameStateText" class="text-center">X's Turn</h1>
-      <div id="gameBoard" class="mx-auto">
-          <div class=" square b-right b-bottom"></div>
-          <div class=" square b-left b-right b-bottom"></div>
-          <div class=" square b-left b-bottom"></div>
-          <div class="square b-right b-bottom b-top">X</div>
-          <div class="square b-right b-left b-bottom b-top">X</div>
-          <div class="square b-left b-bottom b-top">X</div>
-          <div class="square b-right b-top">X</div>
-          <div class="square b-right b-left b-top">X</div>
-          <div class="square b-left b-top">X</div>
-        <div class="">
-          <button type="button"class="btn" id="newGameButton">New Game</button>
-        </div>
-      </div> -->
-      <!-- Flexbos system -->
-        <!-- <div id="gameBoard" class="mx-auto">
-          <div class="my-row b-bottom">
-            <div class=" square b-right"></div>
-            <div class=" square b-left b-right"></div>
-            <div class=" square b-left">X</div>
-          </div>
-          <div class="my-row b-bottom b-top">
-            <div class="square b-right">X</div>
-            <div class="square b-right b-left">X</div>
-            <div class="square b-left">X</div>
-          </div>
-          <div class="my-row b-top">
-            <div class="square b-right">X</div>
-            <div class="square b-right b-left">X</div>
-            <div class="square b-left">X</div>
-          </div>
-          <div class="">
-            <button type="button"class="btn" id="newGameButton">New Game</button>
-          </div>
-        </div> -->
-      <!-- <div class="row justify-content-center">
-        <div id="gameBoard" class="col-10 col-md-6">
-          <div class="row b-bottom">
-            <div class="col square b-right">&nbsp;</div>
-            <div class="col square b-right b-left">&nbsp</div>
-            <div class="col square b-left">&nbsp</div>
-          </div>
-          <div class="row b-bottom b-top">
-            <div class="col square b-right">X</div>
-            <div class="col square b-right b-left">X</div>
-            <div class="col square b-left">X</div>
-          </div>
-          <div class="row b-top">
-            <div class="col square b-right">X</div>
-            <div class="col square b-right b-left">X</div>
-            <div class="col square b-left">X</div>
-          </div>
-          <div class="row">
-            <button type="button"class="btn" id="newGameButton">New Game</button>
-          </div>
-        </div>
-      </div> -->
-    <!-- </div>
-    <script src="scripts/jquery.min.js"></script>
-    <script src="scripts/popper.js"></script>
-    <script src="scripts/bootstrap-material-design.js"></script>
-    <script>
-      $("body").bootstrapMaterialDesign();
-    </script>
-    <script src="scripts/main.js"></script>
-  </body>
-</html> -->
 <!doctype html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+  <link rel="stylesheet" href="styles/bootstrap-material-design.min.css">
   <link rel="stylesheet" href="styles/main.css">
   <title>Tic-Tac-Toe</title>
 </head>
 
 <body>
-  <nav class="navbar fixed-top">
-    Tic-Tac-Toe
+  <nav class="navbar navbar-dark fixed-top">
+    <a class="navbar-brand" href="#">Tic-Tac-Toe Node</a>
   </nav>
-  <div id="main-page" class="container page-container">
-    <h1 id="game-state-text">X's Turn</h1>
-    <div id="game-board" class="mx-auto">
-      <div data-id="0" class="square borderright borderbottom"></div>
-      <div data-id="1" class="square borderright borderleft borderbottom"></div>
-      <div data-id="2" class="square borderleft borderbottom"></div>
-      <div data-id="3" class="square bordertop borderright borderbottom"></div>
-      <div data-id="4" class="square bordertop borderright borderleft borderbottom"></div>
-      <div data-id="5" class="square bordertop borderleft borderbottom"></div>
-      <div data-id="6" class="square bordertop borderright"></div>
-      <div data-id="7" class="square bordertop borderright borderleft"></div>
-      <div data-id="8" class="square bordertop borderleft"></div>
-      <button id="new-game-button" class="ml-auto btn btn-dark">New Game</button>
+  <div id="mainPage" class="page-container">
+    <h1 id="gameStateText">X's Turn</h1>
+    <div id="gameBoard">
+        <div data-button-index="0" class="square b-right b-bottom"></div>
+        <div data-button-index="1" class="square b-left b-right b-bottom"></div>
+        <div data-button-index="2" class="square b-left b-bottom"></div>
+        <div data-button-index="3" class="square b-top b-right b-bottom"></div>
+        <div data-button-index="4" class="square b-left b-top b-right b-bottom"></div>
+        <div data-button-index="5" class="square b-left b-top b-bottom"></div>
+        <div data-button-index="6" class="square b-right b-top"></div>
+        <div data-button-index="7" class="square b-left b-right b-top"></div>
+        <div data-button-index="8" class="square b-left b-top"></div>
+        <button type="button" class="btn" id="newGameButton">New Game</button>
     </div>
 
-    <!-- The Bootstrap way to do layout -->
+    <!-- Flexbox system -->
+    <!-- <div id="gameBoard">
+      <div class="my-row">
+        <div class="square b-right b-bottom"></div>
+        <div class="square b-left b-right b-bottom"></div>
+        <div class="square b-left b-bottom">&nbsp;</div>
+      </div>
+      <div class="my-row">
+        <div class="square b-top b-right b-bottom"></div>
+        <div class="square b-left b-top b-right b-bottom">X</div>
+        <div class="square b-left b-top b-bottom">X</div>
+      </div>
+      <div class="my-row">
+        <div class="b-right b-top square"></div>
+        <div class="b-left b-right b-top square">X</div>
+        <div class="b-left b-top square">X</div>
+      </div>
+      <div class="my-row">
+        <button type="button" class="btn" id="newGameButton">New Game</button>
+      </div>
+    </div> -->
+
+    <!-- Bootstrap system -->
     <!-- <div class="row justify-content-center">
-      <div id="game-board" class="col-10 col-md-6">
+      <div id="gameBoard" class="col-10 col-md-6">
         <div class="row">
-          <div id="button0" class="square borderright borderbottom col">X</div>
-          <div id="button1" class="square borderright borderleft borderbottom col">X</div>
-          <div id="button2" class="square borderleft borderbottom col">X</div>
+          <div class="col square b-right b-bottom">&nbsp;</div>
+          <div class="col square b-left b-right b-bottom">&nbsp;</div>
+          <div class="col square b-left b-bottom">&nbsp;</div>
         </div>
         <div class="row">
-          <div id="button3" class="square bordertop borderright borderbottom col">X</div>
-          <div id="button4" class="square bordertop borderright borderleft borderbottom col">X</div>
-          <div id="button5" class="square bordertop borderleft borderbottom col">X</div>
+          <div class="col square b-top b-right b-bottom">X</div>
+          <div class="col square b-left b-top b-right b-bottom">X</div>
+          <div class="col square b-left b-top b-bottom">X</div>
         </div>
         <div class="row">
-          <div id="button6" class="square bordertop borderright col">X</div>
-          <div id="button7" class="square bordertop borderright borderleft col">X</div>
-          <div id="button8" class="square bordertop borderleft col">X</div>
+          <div class="col b-right b-top square">X</div>
+          <div class="col b-left b-right b-top square">X</div>
+          <div class="col b-left b-top square">X</div>
         </div>
         <div class="row">
-          <button id="new-game-button" class="ml-auto btn btn-dark">New Game</button>
+          <button type="button" class="btn" id="newGameButton">New Game</button>
         </div>
       </div>
     </div> -->
+
   </div>
   <script src="scripts/jquery.min.js"></script>
-  <script src="scripts/popper.min.js"></script>
-  <script src="scripts/bootstrap.min.js"></script>
+  <script src="scripts/popper.js"></script>
+  <script src="scripts/bootstrap-material-design.js"></script>
+  <script>
+    $("body").bootstrapMaterialDesign();
+  </script>
   <script src="scripts/main.js"></script>
 </body>
 

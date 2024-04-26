@@ -4,28 +4,23 @@ var app = express();
 app.use(express.static("public"));
 
 
-
 app.get("/api/getmove/:board", (request, response) => {
-    const boardString = request.params.board;
-
-    const openLocations = getOpenLocations(boardString);
-
-    const moveSelected = openLocations[Math.floor(Math.random() * openLocations.length)]
-    console.log(boardString);
-    response.send({"move": moveSelected});
+  const boardString = request.params.board;
+  const openings = getOpenLocations(boardString);
+  const moveSelected = openings[Math.floor(Math.random() * openings.length)];
+  response.send({"move": moveSelected});
 });
 
-function getOpenLocations(boardString) {
-    const openLocations = [];
-    for (var i = 0; i < boardString.length; i++) {
-        if (boardString.charAt(i) == '-') {
-            openLocations.push(i)
-        }
-    }
-    return openLocations;
-}
 
-console.log(getOpenLocations("-OO-OOOOO"));
+function getOpenLocations(boardString) {
+  const openLocations = [];
+  for (var i = 0; i < boardString.length; i++) {
+    if (boardString.charAt(i) == '-') {
+      openLocations.push(i)
+    }
+  }
+  return openLocations;
+ }
 
 
 app.listen(3000);

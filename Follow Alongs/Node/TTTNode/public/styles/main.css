@@ -1,88 +1,3 @@
-/* body {
-    background: #DDDDDD;
-}
-
-.navbar {
-    background-color: #800000;
-    color: white;
-}
-
-.page-container {
-    margin-top: 75px;
-}
-
-.square {
-    background-color: #80000080;
-    color: white;
-    text-align: center;
-    line-height: 100px;
-    font-size: 60px;
-    font-weight: 500;
-    flex: 1 0 0;
-}
-
-.b-top {
-    border-top: 4px solid black;
-}
-
-.b-bottom {
-    border-bottom: 4px solid black;
-}
-
-.b-right {
-    border-right: 4px solid black;
-}
-
-.b-left {
-    border-left: 4px solid black;
-}
-
-#newGameButton {
-    background-color: #800000;
-    color: white;
-    margin-top: 15px;
-    margin-left: auto;
-}
-
-.my-row {
-    display: flex;
-    direction: row;
-}
-
-#gameBoard {
-    height: 300px;
-    width: 300px;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 33% 33% 33%;
-}
-
-@media (min-width: 576px) {
-    #gameBoard {
-        height: 450px;
-        width: 450px;
-    }
-
-    .square {
-        font-size: 120px;
-        line-height: 180px;
-    }
-
-    #newGameButton {
-        font-size: 1.25em !important;
-    }
-}
-
-@media (min-width: 768px) {
-    #gameBoard {
-        height: 600px;
-        width: 600px;
-    }
-
-    #newGameButton {
-        font-size: 1.5em !important;
-    }
-} */
 body {
     background: #DDDDDD;
 }
@@ -93,73 +8,88 @@ body {
 }
 
 .page-container {
-    margin-top: 80px;
+    margin-top: 75px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-#game-state-text {
+/* #gameStateText {
     text-align: center;
-}
-
-#game-board {
-    margin-top: 40px;
-    display: grid;
-    width: 300px;
-    height: 300px;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 33% 33% 33%;
-}
+} */
 
 .square {
-    font-size: 4em;
-    line-height: 100px;
-    background: #80000080;
+    background-color: #80000080;
     color: white;
-    text-align: center;
+    flex: 1 0 33.3%;
+    font-size: 60px;
     font-weight: 500;
+    line-height: 100px;
+    text-align: center;
 }
 
-@media (min-width: 576px) { 
-    #game-board {
-        width: 450px;
-        height: 450px;
-    }    
-    .square {
-        font-size: 6em;
-        line-height: 150px;
-    }
- }
-
-@media (min-width: 768px) { 
-    #game-board {
-        width: 600px;
-        height: 600px;
-    }    
-    .square {
-        font-size: 8em;
-        line-height: 200px;
-    }
- }
-
-
-
-.borderleft {
-    border-left: 4px solid #000;
+.b-top {
+    border-top: 4px solid #000000;
 }
 
-.borderright {
-    border-right: 4px solid #000;
+.b-bottom {
+    border-bottom: 4px solid #000000;
 }
 
-.bordertop {
-    border-top: 4px solid #000;
+.b-left {
+    border-left: 4px solid #000000;
 }
 
-.borderbottom {
-    border-bottom: 4px solid #000;
+.b-right {
+    border-right: 4px solid #000000;
 }
 
-#new-game-button {
-    margin-top: 15px;
+#newGameButton {
     background: #800000;
+    margin-top: 15px;
+    color: white;
+    margin-left: auto;
     grid-column: span 3;
+}
+
+.my-row {
+    display: flex;
+    flex-direction: row;
+}
+
+#gameBoard {
+    height: 300px;
+    /* margin: 20px auto; */
+    width: 300px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 33.3% 33.3% 33.3%;
+}
+
+@media (min-width: 576px) {
+    #gameBoard {
+        height: 450px;
+        width: 450px;
+    }
+    .square {
+        font-size: 90px;
+        line-height: 140px;
+    }
+    #newGameButton {
+        font-size: 1.25em;
+    }
+}
+
+@media (min-width: 768px) {
+    #gameBoard {
+        height: 600px;
+        width: 600px;
+    }
+    .square {
+        font-size: 120px;
+        line-height: 180px;
+    }
+    #newGameButton {
+        font-size: 1.5em;
+    }
 }
