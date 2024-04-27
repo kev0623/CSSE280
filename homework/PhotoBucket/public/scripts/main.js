@@ -1,77 +1,59 @@
-var rhit = rhit || {};
+var pb = pb || {};
 
-rhit.FB_COLLECTION_PHOTOBUCKET = "Photos";
-rhit.FB_KEY_IMAGE = "imageURL";
-rhit.FB_KEY_CAPTION = "caption";
-rhit.FB_KEY_LAST_TOUCHED = "LastTouched";
-rhit.fbPhotoBucketManager = null;
-rhit.fbSinglePhotoManager = null;
+pb.COLLECTION_PHOTOS = "Photos";
+pb.KEY_IMAGE_URL = "imageURL";
+pb.KEY_CAPTION = "caption";
+pb.KEY_LAST_MODIFIED = "LastTouched";
+pb.photoManager = null;
+pb.singlePhotoController = null;
 
-// From stack overflow https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro/35385518#35385518
-function htmlToElement(html) {
+// Function to convert HTML string into DOM element
+function convertHTML(html) {
 	var template = document.createElement('template');
 	html = html.trim();
 	template.innerHTML = html;
 	return template.content.firstChild;
 }
 
-rhit.ListPageController = class {
+pb.PhotoGridController = class {
 	constructor() {
-		document.querySelector("#submitAddPhoto").addEventListener("click", (event) => {
+		document.querySelector("#submitAddPhoto").addEventListener("click", () => {
 			const imageURL = document.querySelector("#inputImageURL").value;
 			const caption = document.querySelector("#inputCaption").value;
-			rhit.fbPhotoBucketManager.add(imageURL, caption);
+			pb.photoManager.addPhoto(imageURL, caption);
 		});
 
-		$("#addPhotoDialog").on("show.bs.modal", (event) => {
-			// pre-animation
+		$("#addPhotoDialog").on("show.bs.modal", () => {
 			document.querySelector("#inputImageURL").value = "";
 			document.querySelector("#inputCaption").value = "";
 		});
-		$("#addPhotoDialog").on("shown.bs.modal", (event) => {
-			// post-animation
+		$("#addPhotoDialog").on("shown.bs.modal", () => {
 			document.querySelector("#inputImageURL").focus();
 		});
-		// Start listening
-		rhit.fbPhotoBucketManager.beginListening(this.updateList.bind(this));
+		pb.photoManager.startObserving(this.updateGrid.bind(this));
 	}
-	updateList() {
-		console.log("I need to update the list on the page");
-		console.log(`Num photos = ${rhit.fbPhotoBucketManager.length}`);
-		console.log(`Example photo = `, rhit.fbPhotoBucketManager.getPhotoAtIndex(0));
-
-		// Make a new quoteListContainer
-		const newList = htmlToElement('<div id="columns"></div>');
-		// Fill the quoteListContainer with quote cards using a loop
-		for (let i=0;i<rhit.fbPhotoBucketManager.length;i++) {
-			const img = rhit.fbPhotoBucketManager.getPhotoAtIndex(i);
-			const newCard = this._createCard(img)
-
-			newCard.onclick = (event) => {
-				// rhit.storage.setMovieQuoteId(mq.id);
-				window.location.href = `/photo.html?id=${img.id}`;
-			}
-
-			newList.appendChild(newCard);
+	updateGrid() {
+		const newGrid = convertHTML('<div id="columns"></div>');
+		for (let i = 0; i < pb.photoManager.numPhotos; i++) {
+			const photo = pb.photoManager.getPhoto(i);
+			const newCard = this.createPhotoCard(photo);
+			newCard.onclick = () => {
+				window.location.href = `/photo.html?id=${photo.id}`;
+			};
+			newGrid.appendChild(newCard);
 		}
-		// Remove the old quoteListContainer
-		const oldList = document.querySelector("#columns");
-		oldList.removeAttribute("id");
-		oldList.hidden = true;
-		// Put in the new quoteListContainer
-		oldList.parentElement.appendChild(newList);
+		const oldGrid = document.querySelector("#columns");
+		oldGrid.parentNode.replaceChild(newGrid, oldGrid);
 	}
-	_createCard(photo) {
-		return htmlToElement(`<div class="pin" id="${photo.id}">
-        <img
-          src="${photo.imageURL}"
-          alt="${photo.caption}">
+	createPhotoCard(photo) {
+		return convertHTML(`<div class="pin" id="${photo.id}">
+        <img src="${photo.imageURL}" alt="${photo.caption}">
         <p class="caption">${photo.caption}</p>
-      </div>`)
+      </div>`);
 	}
 }
 
-rhit.Photo = class {
+pb.Photo = class {
 	constructor(id, imageURL, caption) {
 		this.id = id;
 		this.imageURL = imageURL;
@@ -79,143 +61,124 @@ rhit.Photo = class {
 	}
 }
 
-rhit.FBPhotoBucketManager = class {
+pb.PhotoManager = class {
 	constructor() {
-		console.log("created photobucketmanager");
-		this._documentSnapshots = [];
-		this._ref = firebase.firestore().collection(rhit.FB_COLLECTION_PHOTOBUCKET);
-		this._unsubscribe = null;
+		this._documents = [];
+		this._reference = firebase.firestore().collection(pb.COLLECTION_PHOTOS);
+		this._unsubscriber = null;
 	}
-	add(imageURL, caption){
-		this._ref.add({
-			[rhit.FB_KEY_IMAGE]: imageURL,
-			[rhit.FB_KEY_CAPTION]: caption,
-			[rhit.FB_KEY_LAST_TOUCHED]: firebase.firestore.Timestamp.now(),
+	addPhoto(imageURL, caption) {
+		this._reference.add({
+			[pb.KEY_IMAGE_URL]: imageURL,
+			[pb.KEY_CAPTION]: caption,
+			[pb.KEY_LAST_MODIFIED]: firebase.firestore.Timestamp.now(),
 		})
-		.then(function (docRef) {
-			console.log("Document written with ID: ", docRef.id);
-		})
-		.catch(function (error) {
-			console.error("Error adding document: ", error);
-		})
+		.then(docRef => console.log("Document added with ID: ", docRef.id))
+		.catch(error => console.error("Error adding document: ", error));
 	}
-	beginListening(changelistener){
-		this.unsubscribe = this._ref.orderBy(rhit.FB_KEY_LAST_TOUCHED, "desc").limit(50).onSnapshot((querySnapshot) => {
-			console.log("PhotoBucket update");
-			this._documentSnapshots = querySnapshot.docs;
-			changelistener();
-		})
+	startObserving(changeListener) {
+		this._unsubscriber = this._reference.orderBy(pb.KEY_LAST_MODIFIED, "desc").limit(50).onSnapshot(querySnapshot => {
+			this._documents = querySnapshot.docs;
+			changeListener();
+		});
 	}
-	stopListening(){
-		this.unsubscribe();
+	stopObserving() {
+		if (this._unsubscriber) {
+			this._unsubscriber();
+		}
 	}
-	get length(){
-		return this._documentSnapshots.length;
+	get numPhotos() {
+		return this._documents.length;
 	}
-	getPhotoAtIndex(index){
-		const docSnapshot = this._documentSnapshots[index];
-		const img = new rhit.Photo(
-			docSnapshot.id,
-			docSnapshot.get(rhit.FB_KEY_IMAGE),
-			docSnapshot.get(rhit.FB_KEY_CAPTION));
-			return img;
+	getPhoto(i) {
+		const doc = this._documents[i];
+		return new pb.Photo(doc.id, doc.get(pb.KEY_IMAGE_URL), doc.get(pb.KEY_CAPTION));
 	}
 }
 
-rhit.PhotoPageController = class {
+pb.PhotoDetailController = class {
 	constructor() {
-		document.querySelector("#submitEditCaption").addEventListener("click", (event) => {
+		document.querySelector("#submitEditCaption").addEventListener("click", () => {
 			const caption = document.querySelector("#inputCaption").value;
-			rhit.fbSinglePhotoManager.update(caption);
+			pb.singlePhotoController.updateCaption(caption);
 		});
 
-		$("#editPhotoDialog").on("show.bs.modal", (event) => {
-			// pre-animation
-			document.querySelector("#inputCaption").value = rhit.fbSinglePhotoManager.caption;
+		$("#editPhotoDialog").on("show.bs.modal", () => {
+			document.querySelector("#inputCaption").value = pb.singlePhotoController.caption;
 		});
-		$("#editPhotoDialog").on("shown.bs.modal", (event) => {
-			// post-animation
+		$("#editPhotoDialog").on("shown.bs.modal", () => {
 			document.querySelector("#inputCaption").focus();
 		});
 
-		document.querySelector("#submitDeletePhoto").addEventListener("click", (event) => {
-			rhit.fbSinglePhotoManager.delete().then(() => {
-				console.log("successfully deleted");
+		document.querySelector("#submitDeletePhoto").addEventListener("click", () => {
+			pb.singlePhotoController.deletePhoto().then(() => {
 				window.location.href = "/";
-			}).catch((error) => {
-				console.error("error removing: ", error);
-			});;
+			}).catch(error => console.error("Error removing: ", error));
 		});
 
-		rhit.fbSinglePhotoManager.beginListening(this.updateView.bind(this));
+		pb.singlePhotoController.startObserving(this.refreshView.bind(this));
 	}
-	updateView() {  
-		document.querySelector("#photo").src = rhit.fbSinglePhotoManager.imageURL;
-		document.querySelector("#caption").innerHTML = rhit.fbSinglePhotoManager.caption;
+	refreshView() {
+		document.querySelector("#photo").src = pb.singlePhotoController.imageURL;
+		document.querySelector("#caption").textContent = pb.singlePhotoController.caption;
 	}
 }
 
-rhit.FbSinglePhotoManager = class {
+pb.SinglePhotoController = class {
 	constructor(photoId) {
-	  this._documentSnapshot = {};
-	  this._unsubscribe = null;
-	  this._ref = firebase.firestore().collection(rhit.FB_COLLECTION_PHOTOBUCKET).doc(photoId);
+		this._docSnapshot = {};
+		this._unsub = null;
+		this._ref = firebase.firestore().collection(pb.COLLECTION_PHOTOS).doc(photoId);
 	}
-	beginListening(changeListener) {
-		console.log("hi");
-		this._unsubscribe = this._ref.onSnapshot((doc) => {
+	startObserving(changeListener) {
+		this._unsub = this._ref.onSnapshot(doc => {
 			if (doc.exists) {
-				console.log(doc.data());
-				this._documentSnapshot = doc;
-				console.log(doc);
+				this._docSnapshot = doc;
 				changeListener();
 			} else {
-				console.log("no such document!");
+				console.log("No such document!");
 			}
 		});
 	}
-	stopListening() {
-	  this._unsubscribe();
+	stopObserving() {
+		if (this._unsub) {
+			this._unsub();
+		}
 	}
-	update(caption) {
+	updateCaption(caption) {
 		this._ref.update({
-			[rhit.FB_KEY_CAPTION]: caption,
-			[rhit.FB_KEY_LAST_TOUCHED]: firebase.firestore.Timestamp.now(),
+			[pb.KEY_CAPTION]: caption,
+			[pb.KEY_LAST_MODIFIED]: firebase.firestore.Timestamp.now(),
 		})
-		.then(function () {
-			console.log("Document successfully updated");
-		})
-		.catch(function (error) {
-			console.error("Error adding document: ", error);
-		})
+		.then(() => console.log("Document successfully updated"))
+		.catch(error => console.error("Error updating document: ", error));
 	}
-	delete() {
+	deletePhoto() {
 		return this._ref.delete();
 	}
 	get imageURL() {
-		console.log(this._documentSnapshot);
-		return this._documentSnapshot.get(rhit.FB_KEY_IMAGE);
+		return this._docSnapshot.get(pb.KEY_IMAGE_URL);
 	}
 	get caption() {
-		return this._documentSnapshot.get(rhit.FB_KEY_CAPTION);
+		return this._docSnapshot.get(pb.KEY_CAPTION);
 	}
 }
 
-rhit.main = function () {
-	if(document.querySelector("#listPage")) {
-		rhit.fbPhotoBucketManager = new rhit.FBPhotoBucketManager();
-		new rhit.ListPageController();
+pb.main = function () {
+	if (document.querySelector("#listPage")) {
+		pb.photoManager = new pb.PhotoManager();
+		new pb.PhotoGridController();
 	}
-	if(document.querySelector("#detailPage")) {
+	if (document.querySelector("#detailPage")) {
 		const queryString = window.location.search;
 		const urlParams = new URLSearchParams(queryString);
 		const photoId = urlParams.get("id");
 		if (!photoId) {
-			window.location.href = "/"
+			window.location.href = "/";
 		}
-		rhit.fbSinglePhotoManager = new rhit.FbSinglePhotoManager(photoId);
-		new rhit.PhotoPageController();
+		pb.singlePhotoController = new pb.SinglePhotoController(photoId);
+		new pb.PhotoDetailController();
 	}
 };
 
-rhit.main();
+pb.main();
