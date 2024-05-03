@@ -249,7 +249,7 @@ rhit.fbAuthManager = class {
 		});
 	}
 	signInWithRosefire() {
-		Rosefire.signIn("a46539b1-a643-4d8f-9aae-158e3f2f2ae0", (err, rfUser) => {
+		Rosefire.signIn("77b82ca4-c269-459e-92a2-d348f0c0b34b", (err, rfUser) => {
 			if (err) {
 			  console.log("Rosefire error!", err);
 			  return;
