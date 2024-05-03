@@ -1,7 +1,11 @@
 var express = require("express");
 var app = express();
+var cors = require("cors");
 
+app.use(cors());
 let data=[];
+
+
 
 const logger = require("morgan");
 app.use( logger('dev') ); //helpful information serverside when requests come in
@@ -28,7 +32,7 @@ function saveToServer(data) {
     })
 }
 
-app.use('/static', express.static("public") );
+
 
 //middleware
 // var bodyParser = require("body-parser");

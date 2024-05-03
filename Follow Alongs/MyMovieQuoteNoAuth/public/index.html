@@ -1,70 +1,89 @@
+
 <!doctype html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+  <link rel="stylesheet" href="styles/bootstrap-material-design.min.css">
   <link rel="stylesheet" href="styles/main.css">
-  <title>Movie Quotes</title>
+  <title>My Movie Quotes</title>
 </head>
 
 <body>
   <nav class="navbar navbar-dark fixed-top">
-    <a class="navbar-brand" href="#">Movie Quote</a>
+    <a class="navbar-brand" href="#">My Movie Quotes</a>
   </nav>
-  <div id="fab" data-toggle="modal" data-target="#addQuoteDialog">
-    <img src="images/fab.png" alt="fab">
-  </div>
-  <div id="list-page" class="container page-container">
-    <div class="row justify-content-center">
-      <div id="quoteListContainer" class="col col-md-8">
-        <ul id="quoteList" class="list-group">
-          <!-- <li id="quoteCardTemplate" class="invisible quote-card list-group-item">
-            <div class="quote-card-quote"></div>
-            <div class="quote-card-movie text-right blockquote-footer">Loading</div>
-          </li> -->
-        </ul>
+
+  <div class="bmd-layout-container bmd-drawer-f-l bmd-drawer-overlay">
+    <header class="bmd-layout-header">
+      <div class="navbar navbar-dark bg-faded fixed-top justify-content-start">
+        <button class="navbar-toggler" type="button" data-toggle="drawer" data-target="#dw-s2">
+          <span class="sr-only">Toggle Drawer</span>
+          <i class="material-icons">menu</i>
+        </button>
+        <a class="navbar-brand" href="#">&nbsp;&nbsp;My Movie Quotes</a>
       </div>
+    </header>
+    <div id="dw-s2" class="bmd-layout-drawer bg-faded">
+      <header>
+        <a class="navbar-brand">My Movie Quotes</a>
+      </header>
+      <ul class="list-group">
+        <a id="menuShowAllQuotes"class="list-group-item"><i class="material-icons">people_alt</i>Show all quotes</a>
+        <a id="menuShowMyQuotes"class="list-group-item"><i class="material-icons">person</i>Show my quotes</a>
+        <a id="menuSignOut"class="list-group-item"><i class="material-icons">login</i>Sign out</a>
+      </ul>
     </div>
-
+    <main class="bmd-layout-content">
+      <div id="listPage" class="container page-container">
+        <div id="quoteListContainer"></div>
+      </div>
+    </main>
   </div>
 
+  
+  <button id="fab" type="button" class="btn bmd-btn-fab" data-toggle="modal" data-target="#addQuoteDialog">
+    <i class="material-icons">add</i>
+  </button>
 
   <!-- Modal -->
-  <div class="modal fade" id="addQuoteDialog" tabindex="-1" role="dialog" aria-labelledby="add quote"
-    aria-hidden="true">
+  <div class="modal fade" id="addQuoteDialog" tabindex="-1" role="dialog" aria-labelledby="Add Quote Dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Add a movie quote</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Add Movie Quote</h5>
         </div>
         <div class="modal-body">
-          <div class="form-group row">
-            <label for="inputQuote" class="col-sm-2 mt-sm-2 control-label">Quote:</label>
-            <div class="col-sm-10">
-              <input type="text" id="inputQuote" class="form-control" placeholder="Favorite movie quote">
-            </div>
+          <div class="form-group bmd-form-group">
+            <label for="#inputQuote" class="bmd-label-floating">Quote</label>
+            <input type="text" class="form-control" id="inputQuote">
           </div>
-          <div class="form-group row">
-            <label for="inputMovie" class="col-sm-2 mt-sm-2 control-label">Movie:</label>
-            <div class="col-sm-10">
-              <input type="text" id="inputMovie" class="form-control" placeholder="Name of the movie">
-            </div>
+          <div class="form-group bmd-form-group">
+            <label for="#inputMovie" class="bmd-label-floating">Movie</label>
+            <input type="text" class="form-control" id="inputMovie">
+            <span class="bmd-help">What movie is this quote from?</span>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline-light" data-dismiss="modal">CANCEL</button>
-          <button type="button" id="submitAddQuote" class="btn btn-outline-light" data-dismiss="modal">CREATE</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+          <button id="submitAddQuote" type="button" class="btn btn-primary" data-dismiss="modal">CREATE</button>
         </div>
       </div>
     </div>
   </div>
+
+  
+
   <script src="scripts/jquery.min.js"></script>
-  <script src="scripts/popper.min.js"></script>
-  <script src="scripts/bootstrap.min.js"></script>
-  <script src="/__/firebase/6.3.5/firebase-app.js"></script>
-  <script src="/__/firebase/6.3.5/firebase-firestore.js"></script>
+  <script src="scripts/popper.js"></script>
+  <script src="scripts/bootstrap-material-design.js"></script>
+  <script>$("body").bootstrapMaterialDesign();</script>
+  <script src="/__/firebase/7.18.0/firebase-app.js"></script>
+  <script src="/__/firebase/7.18.0/firebase-analytics.js"></script>
+  <script src="/__/firebase/7.18.0/firebase-auth.js"></script>
+  <script src="/__/firebase/7.18.0/firebase-firestore.js"></script>
   <script src="/__/firebase/init.js"></script>
   <script src="scripts/main.js"></script>
 </body>
