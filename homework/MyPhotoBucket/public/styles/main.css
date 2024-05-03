@@ -66,3 +66,40 @@ body {
 .dropdown-menu-right {
     left: -128px;
 }
+
+#rosefireButton {
+    display: block;
+    margin: 60px auto;
+    color: white;
+    background: #800000;
+    font-size: 1.1em;
+    padding: 10px 30px;
+    border-radius: 5px;
+}
+
+#signInText {
+    text-align: center;
+    font-size: 3em;
+    margin-bottom: 1em;
+}
+
+.bmd-layout-content {
+    height: 100vh;
+}
+
+.bmd-layout-drawer > header {
+    background-color: #800000;
+    color: white;
+}
+
+.bmd-layout-drawer > ul {
+    background-color: #DDDDDD;
+}
+
+.list-group-item :first-child {
+    margin-right: 0.75em;
+}
+
+#menuEdit, #menuDelete {
+    display: none;
+}
