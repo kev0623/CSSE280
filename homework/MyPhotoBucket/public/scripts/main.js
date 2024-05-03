@@ -1,16 +1,15 @@
 var rhit = rhit || {};
 
-rhit.FB_COLLECTION_PHOTOBUCKET = "Photos";
-rhit.FB_KEY_IMAGE = "imageURL";
-rhit.FB_KEY_CAPTION = "caption";
-rhit.FB_KEY_LAST_TOUCHED = "LastTouched";
-rhit.FB_KEY_AUTHOR = "author";
-rhit.fbPhotoBucketManager = null;
-rhit.fbSinglePhotoManager = null;
-rhit.fbAuthManager = null;
+rhit.COLLECTION_PHOTOS = "Photos";
+rhit.KEY_IMAGE_URL = "imageURL";
+rhit.KEY_CAPTION = "caption";
+rhit.KEY_LAST_UPDATED = "LastTouched";
+rhit.KEY_AUTHOR = "author";
+rhit.photoBucketManager = null;
+rhit.singlePhotoManager = null;
+rhit.authManager = null;
 
-// From stack overflow https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro/35385518#35385518
-function htmlToElement(html) {
+function convertHtmlToElement(html) {
 	var template = document.createElement('template');
 	html = html.trim();
 	template.innerHTML = html;
@@ -23,63 +22,51 @@ rhit.ListPageController = class {
 			window.location.href = "/bucket.html";
 		});
 		document.querySelector("#menuShowMyPhotos").addEventListener("click", (event) => {
-			window.location.href = `/bucket.html?uid=${rhit.fbAuthManager.uid}`
+			window.location.href = `/bucket.html?uid=${rhit.authManager.uid}`
 		});
 		document.querySelector("#menuSignOut").addEventListener("click", (event) => {
-			rhit.fbAuthManager.signOut();
+			rhit.authManager.signOut();
 		});
 
 		document.querySelector("#submitAddPhoto").addEventListener("click", (event) => {
 			const imageURL = document.querySelector("#inputImageURL").value;
 			const caption = document.querySelector("#inputCaption").value;
-			rhit.fbPhotoBucketManager.add(imageURL, caption);
+			rhit.photoBucketManager.addPhoto(imageURL, caption);
 		});
 
 		$("#addPhotoDialog").on("show.bs.modal", (event) => {
-			// pre-animation
 			document.querySelector("#inputImageURL").value = "";
 			document.querySelector("#inputCaption").value = "";
 		});
 		$("#addPhotoDialog").on("shown.bs.modal", (event) => {
-			// post-animation
 			document.querySelector("#inputImageURL").focus();
 		});
-		// Start listening
-		rhit.fbPhotoBucketManager.beginListening(this.updateList.bind(this));
+		rhit.photoBucketManager.startListening(this.updatePhotoList.bind(this));
 	}
-	updateList() {
-		console.log("I need to update the list on the page");
-		console.log(`Num photos = ${rhit.fbPhotoBucketManager.length}`);
-		console.log(`Example photo = `, rhit.fbPhotoBucketManager.getPhotoAtIndex(0));
+	updatePhotoList() {
+		console.log("Updating the photo list on the page");
 
-		// Make a new quoteListContainer
-		const newList = htmlToElement('<div id="columns"></div>');
-		// Fill the quoteListContainer with quote cards using a loop
-		for (let i=0;i<rhit.fbPhotoBucketManager.length;i++) {
-			const img = rhit.fbPhotoBucketManager.getPhotoAtIndex(i);
-			const newCard = this._createCard(img)
+		const newPhotoList = convertHtmlToElement('<div id="columns"></div>');
+		for (let i = 0; i < rhit.photoBucketManager.numberOfPhotos; i++) {
+			const photo = rhit.photoBucketManager.getPhotoByIndex(i);
+			const photoCard = this.createPhotoCard(photo);
 
-			newCard.onclick = (event) => {
-				// rhit.storage.setMovieQuoteId(mq.id);
-				window.location.href = `/photo.html?id=${img.id}`;
+			photoCard.onclick = () => {
+				window.location.href = `/photo.html?id=${photo.id}`;
 			}
 
-			newList.appendChild(newCard);
+			newPhotoList.appendChild(photoCard);
 		}
-		// Remove the old quoteListContainer
-		const oldList = document.querySelector("#columns");
-		oldList.removeAttribute("id");
-		oldList.hidden = true;
-		// Put in the new quoteListContainer
-		oldList.parentElement.appendChild(newList);
+		const oldPhotoList = document.querySelector("#columns");
+		oldPhotoList.removeAttribute("id");
+		oldPhotoList.hidden = true;
+		oldPhotoList.parentElement.appendChild(newPhotoList);
 	}
-	_createCard(photo) {
-		return htmlToElement(`<div class="pin" id="${photo.id}">
-        <img
-          src="${photo.imageURL}"
-          alt="${photo.caption}">
+	createPhotoCard(photo) {
+		return convertHtmlToElement(`<div class="pin" id="${photo.id}">
+        <img src="${photo.imageURL}" alt="${photo.caption}">
         <p class="caption">${photo.caption}</p>
-      </div>`)
+      </div>`);
 	}
 }
 
@@ -91,160 +78,154 @@ rhit.Photo = class {
 	}
 }
 
-rhit.FBPhotoBucketManager = class {
-	constructor(uid) {
-		this._uid = uid;
-		this._documentSnapshots = [];
-		this._ref = firebase.firestore().collection(rhit.FB_COLLECTION_PHOTOBUCKET);
-		this._unsubscribe = null;
+rhit.PhotoBucketManager = class {
+	constructor(userId) {
+		this.userId = userId;
+		this.documentSnapshots = [];
+		this.dbRef = firebase.firestore().collection(rhit.COLLECTION_PHOTOS);
+		this.unsubscribe = null;
 	}
-	add(imageURL, caption){
-		this._ref.add({
-			[rhit.FB_KEY_IMAGE]: imageURL,
-			[rhit.FB_KEY_CAPTION]: caption,
-			[rhit.FB_KEY_LAST_TOUCHED]: firebase.firestore.Timestamp.now(),
-			[rhit.FB_KEY_AUTHOR]: rhit.fbAuthManager.uid,
+	addPhoto(imageURL, caption){
+		this.dbRef.add({
+			[rhit.KEY_IMAGE_URL]: imageURL,
+			[rhit.KEY_CAPTION]: caption,
+			[rhit.KEY_LAST_UPDATED]: firebase.firestore.Timestamp.now(),
+			[rhit.KEY_AUTHOR]: rhit.authManager.uid,
 		})
-		.then(function (docRef) {
+		.then(docRef => {
 			console.log("Document written with ID: ", docRef.id);
 		})
-		.catch(function (error) {
+		.catch(error => {
 			console.error("Error adding document: ", error);
-		})
+		});
 	}
-	beginListening(changelistener){
-		let query = this._ref.orderBy(rhit.FB_KEY_LAST_TOUCHED, "desc").limit(50);
-		if (this._uid) {
-			query = query.where(rhit.FB_KEY_AUTHOR, "==", this._uid);
+	startListening(changeListener){
+		let query = this.dbRef.orderBy(rhit.KEY_LAST_UPDATED, "desc").limit(50);
+		if (this.userId) {
+			query = query.where(rhit.KEY_AUTHOR, "==", this.userId);
 		}
-		this.unsubscribe = query.onSnapshot((querySnapshot) => {
+		this.unsubscribe = query.onSnapshot(querySnapshot => {
 			console.log("PhotoBucket update");
-			this._documentSnapshots = querySnapshot.docs;
-			changelistener();
-		})
+			this.documentSnapshots = querySnapshot.docs;
+			changeListener();
+		});
 	}
 	stopListening(){
 		this.unsubscribe();
 	}
-	get length(){
-		return this._documentSnapshots.length;
+	get numberOfPhotos(){
+		return this.documentSnapshots.length;
 	}
-	getPhotoAtIndex(index){
-		const docSnapshot = this._documentSnapshots[index];
-		const img = new rhit.Photo(
-			docSnapshot.id,
-			docSnapshot.get(rhit.FB_KEY_IMAGE),
-			docSnapshot.get(rhit.FB_KEY_CAPTION));
-			return img;
+	getPhotoByIndex(index){
+		const doc = this.documentSnapshots[index];
+		return new rhit.Photo(
+			doc.id,
+			doc.get(rhit.KEY_IMAGE_URL),
+			doc.get(rhit.KEY_CAPTION));
 	}
 }
 
 rhit.PhotoPageController = class {
 	constructor() {
-		document.querySelector("#menuSignOut").addEventListener("click", (event) => {
-			rhit.fbAuthManager.signOut();
+		document.querySelector("#menuSignOut").addEventListener("click", () => {
+			rhit.authManager.signOut();
 		});
 
-		document.querySelector("#submitEditCaption").addEventListener("click", (event) => {
+		document.querySelector("#submitEditCaption").addEventListener("click", () => {
 			const caption = document.querySelector("#inputCaption").value;
-			rhit.fbSinglePhotoManager.update(caption);
+			rhit.singlePhotoManager.updateCaption(caption);
 		});
 
-		$("#editPhotoDialog").on("show.bs.modal", (event) => {
-			// pre-animation
-			document.querySelector("#inputCaption").value = rhit.fbSinglePhotoManager.caption;
+		$("#editPhotoDialog").on("show.bs.modal", () => {
+			document.querySelector("#inputCaption").value = rhit.singlePhotoManager.caption;
 		});
-		$("#editPhotoDialog").on("shown.bs.modal", (event) => {
-			// post-animation
+		$("#editPhotoDialog").on("shown.bs.modal", () => {
 			document.querySelector("#inputCaption").focus();
 		});
 
-		document.querySelector("#submitDeletePhoto").addEventListener("click", (event) => {
-			rhit.fbSinglePhotoManager.delete().then(() => {
-				console.log("successfully deleted");
+		document.querySelector("#submitDeletePhoto").addEventListener("click", () => {
+			rhit.singlePhotoManager.deletePhoto().then(() => {
+				console.log("Photo successfully deleted");
 				window.location.href = "/bucket.html";
-			}).catch((error) => {
-				console.error("error removing: ", error);
-			});;
+			}).catch(error => {
+				console.error("Error removing photo: ", error);
+			});
 		});
 
-		rhit.fbSinglePhotoManager.beginListening(this.updateView.bind(this));
+		rhit.singlePhotoManager.startListening(this.updatePhotoView.bind(this));
 	}
-	updateView() {  
-		document.querySelector("#photo").src = rhit.fbSinglePhotoManager.imageURL;
-		document.querySelector("#caption").innerHTML = rhit.fbSinglePhotoManager.caption;
-		if (rhit.fbSinglePhotoManager.author == rhit.fbAuthManager.uid) {
+	updatePhotoView() {
+		document.querySelector("#photo").src = rhit.singlePhotoManager.imageURL;
+		document.querySelector("#caption").textContent = rhit.singlePhotoManager.caption;
+		if (rhit.singlePhotoManager.author === rhit.authManager.uid) {
 			document.querySelector("#menuEdit").style.display = "flex";
 			document.querySelector("#menuDelete").style.display = "flex";
 		}
 	}
 }
 
-rhit.FbSinglePhotoManager = class {
+rhit.SinglePhotoManager = class {
 	constructor(photoId) {
-	  this._documentSnapshot = {};
-	  this._unsubscribe = null;
-	  this._ref = firebase.firestore().collection(rhit.FB_COLLECTION_PHOTOBUCKET).doc(photoId);
+		this.documentSnapshot = {};
+		this.unsubscribe = null;
+		this.dbRef = firebase.firestore().collection(rhit.COLLECTION_PHOTOS).doc(photoId);
 	}
-	beginListening(changeListener) {
-		console.log("hi");
-		this._unsubscribe = this._ref.onSnapshot((doc) => {
+	startListening(changeListener) {
+		this.unsubscribe = this.dbRef.onSnapshot(doc => {
 			if (doc.exists) {
-				console.log(doc.data());
-				this._documentSnapshot = doc;
-				console.log(doc);
+				console.log("Document data:", doc.data());
+				this.documentSnapshot = doc;
 				changeListener();
 			} else {
-				console.log("no such document!");
+				console.log("No such document!");
 			}
 		});
 	}
 	stopListening() {
-	  this._unsubscribe();
+	  this.unsubscribe();
 	}
-	update(caption) {
-		this._ref.update({
-			[rhit.FB_KEY_CAPTION]: caption,
-			[rhit.FB_KEY_LAST_TOUCHED]: firebase.firestore.Timestamp.now(),
+	updateCaption(caption) {
+		this.dbRef.update({
+			[rhit.KEY_CAPTION]: caption,
+			[rhit.KEY_LAST_UPDATED]: firebase.firestore.Timestamp.now(),
 		})
-		.then(function () {
+		.then(() => {
 			console.log("Document successfully updated");
 		})
-		.catch(function (error) {
-			console.error("Error adding document: ", error);
-		})
+		.catch(error => {
+			console.error("Error updating document: ", error);
+		});
 	}
-	delete() {
-		return this._ref.delete();
+	deletePhoto() {
+		return this.dbRef.delete();
 	}
 	get imageURL() {
-		console.log(this._documentSnapshot);
-		return this._documentSnapshot.get(rhit.FB_KEY_IMAGE);
+		return this.documentSnapshot.get(rhit.KEY_IMAGE_URL);
 	}
 	get caption() {
-		return this._documentSnapshot.get(rhit.FB_KEY_CAPTION);
+		return this.documentSnapshot.get(rhit.KEY_CAPTION);
 	}
 	get author() {
-		return this._documentSnapshot.get(rhit.FB_KEY_AUTHOR);
+		return this.documentSnapshot.get(rhit.KEY_AUTHOR);
 	}
 }
 
 rhit.LoginPageController = class {
 	constructor() {
 		document.querySelector("#rosefireButton").onclick = () => {
-			rhit.fbAuthManager.signInWithRosefire();
+			rhit.authManager.signInWithRosefire();
 		};
 	};
 }
 
-rhit.fbAuthManager = class {
+rhit.AuthManager = class {
 	constructor() {
-		this._user = null;
-		console.log("made auth manager");
+		this.user = null;
+		console.log("Auth Manager initialized");
 	}
-	beginListening(changeListener) {
-		firebase.auth().onAuthStateChanged((user) => {
-			this._user = user;
+	startListening(changeListener) {
+		firebase.auth().onAuthStateChanged(user => {
+			this.user = user;
 			changeListener();
 		});
 	}
@@ -255,35 +236,35 @@ rhit.fbAuthManager = class {
 			  return;
 			}
 			console.log("Rosefire success!", rfUser);
-			firebase.auth().signInWithCustomToken(rfUser.token).catch((error) => {
+			firebase.auth().signInWithCustomToken(rfUser.token).catch(error => {
 				const errorCode = error.code;
 				const errorMessage = error.message;
 				if (errorCode === 'auth/invalid-custom-token') {
 					alert('The token you provided is invalid.');
 				} else {
-					console.error(error);
+					console.error("Firebase auth error:", error);
 				}
 			});
 		  });
 	}
 	signOut() {
-		firebase.auth().signOut().catch(function (error) {
-			console.log("sign out error");
+		firebase.auth().signOut().catch(error => {
+			console.error("Sign out error:", error);
 		});
 	}
 	get isSignedIn() {
-		return !!this._user;
+		return !!this.user;
 	}
 	get uid() {
-		return this._user.uid;
+		return this.user.uid;
 	}
 }
 
 rhit.checkForRedirects = function () {
-	if (document.querySelector("#loginPage") && rhit.fbAuthManager.isSignedIn) {
+	if (document.querySelector("#loginPage") && rhit.authManager.isSignedIn) {
 		window.location.href = "/bucket.html";
 	}
-	if (!document.querySelector("#loginPage") && !rhit.fbAuthManager.isSignedIn) {
+	if (!document.querySelector("#loginPage") && !rhit.authManager.isSignedIn) {
 		window.location.href = "/";
 	}
 };
@@ -291,8 +272,8 @@ rhit.checkForRedirects = function () {
 rhit.initializePage = function () {
 	if(document.querySelector("#listPage")) {
 		const urlParams = new URLSearchParams(window.location.search);
-		const uid = urlParams.get("uid");
-		rhit.fbPhotoBucketManager = new rhit.FBPhotoBucketManager(uid);
+		const userId = urlParams.get("uid");
+		rhit.photoBucketManager = new rhit.PhotoBucketManager(userId);
 		new rhit.ListPageController();
 	}
 	if(document.querySelector("#detailPage")) {
@@ -302,7 +283,7 @@ rhit.initializePage = function () {
 		if (!photoId) {
 			window.location.href = "/"
 		}
-		rhit.fbSinglePhotoManager = new rhit.FbSinglePhotoManager(photoId);
+		rhit.singlePhotoManager = new rhit.SinglePhotoManager(photoId);
 		new rhit.PhotoPageController();
 	}
 	if(document.querySelector("#loginPage")) {
@@ -326,8 +307,8 @@ rhit.startFirebaseUI = function () {
 }
 
 rhit.main = function () {
-	rhit.fbAuthManager = new rhit.fbAuthManager();
-	rhit.fbAuthManager.beginListening(() => {
+	rhit.authManager = new rhit.AuthManager();
+	rhit.authManager.startListening(() => {
 		rhit.checkForRedirects();
 		rhit.initializePage();
 	});
