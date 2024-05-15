@@ -1,6 +1,7 @@
 var rhit = rhit || {};
 
 rhit.COLLECTION_PHOTOS = "Photos";
+
 rhit.KEY_IMAGE_URL = "imageURL";
 rhit.KEY_CAPTION = "caption";
 rhit.KEY_LAST_UPDATED = "LastTouched";
@@ -89,7 +90,7 @@ rhit.PhotoBucketManager = class {
 		this.dbRef.add({
 			[rhit.KEY_IMAGE_URL]: imageURL,
 			[rhit.KEY_CAPTION]: caption,
-			[rhit.KEY_LAST_UPDATED]: firebase.firestore.Timestamp.now(),
+				
 			[rhit.KEY_AUTHOR]: rhit.authManager.uid,
 		})
 		.then(docRef => {
