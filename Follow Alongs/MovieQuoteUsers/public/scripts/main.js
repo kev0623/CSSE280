@@ -14,7 +14,6 @@ rhit.fbMovieQuotesManager = null;
 rhit.fbSingleQuoteManager = null;
 rhit.fbAuthManager = null;
 rhit.fbUserManager = null;
-rhit.ROSEFIRE_REGISTRY_TOKEN = "eee41100-0867-4b25-b3d0-72d8156e8400";
 
 // From: https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro/35385518#35385518
 function htmlToElement(html) {
@@ -26,27 +25,27 @@ function htmlToElement(html) {
 
 rhit.SideNavController = class {
 	constructor() {
-		const profileItem = document.querySelector("#menuGoToProfilePage");
-		if (profileItem) {
-			profileItem.addEventListener("click", (event) => {
-				window.location.href = "/profile.html";
-			});
-		}
-		const showAllQuotesItem = document.querySelector("#menuShowAllQuotes");
-		if (showAllQuotesItem) {
-			showAllQuotesItem.addEventListener("click", (event) => {
+
+		// Optional chaining works, but the VS code auto formatter doesn't respect it.
+		document.querySelector("#menuGoToProfilePage")?.addEventListener("click", (event) => {
+			window.location.href = "/profile.html";
+		});
+
+		const menuShowAllQuotesItem = document.querySelector("#menuShowAllQuotes");
+		if (menuShowAllQuotesItem) {
+			menuShowAllQuotesItem.addEventListener("click", (event) => {
 				window.location.href = "/list.html";
 			});
 		}
-		const showMyQuotesItem = document.querySelector("#menuShowMyQuotes");
-		if (showMyQuotesItem) {
-			showMyQuotesItem.addEventListener("click", (event) => {
+		const menuShowMyQuotesItem = document.querySelector("#menuShowMyQuotes");
+		if (menuShowMyQuotesItem) {
+			menuShowMyQuotesItem.addEventListener("click", (event) => {
 				window.location.href = `/list.html?uid=${rhit.fbAuthManager.uid}`;
 			});
 		}
-		const signOutItem = document.querySelector("#menuSignOut");
-		if (signOutItem) {
-			signOutItem.addEventListener("click", (event) => {
+		const menuSignOutItem = document.querySelector("#menuSignOut");
+		if (menuSignOutItem) {
+			menuSignOutItem.addEventListener("click", (event) => {
 				rhit.fbAuthManager.signOut();
 			});
 		}
@@ -75,17 +74,19 @@ rhit.ListPageController = class {
 
 		// Start listening!
 		rhit.fbMovieQuotesManager.beginListening(this.updateList.bind(this));
-
-		if (rhit.fbMovieQuotesManager.uid) {
-			rhit.fbUserManager.beginListening(rhit.fbMovieQuotesManager.uid, () => {
-				document.querySelector("#userSpecificHeading").innerHTML = `Showing quotes made by ${rhit.fbUserManager.name}`;
-			});
-		}
 	}
 
 
 	updateList() {
-		console.log(`Num quotes = ${rhit.fbMovieQuotesManager.length}`);
+		if (rhit.fbMovieQuotesManager.uid) {
+			if (!rhit.fbUserManager.isListening) {
+				rhit.fbUserManager.beginListening(rhit.fbMovieQuotesManager.uid, () => {
+					document.querySelector("#userSpecificHeading").innerHTML =
+						`Showing quotes made by ${rhit.fbUserManager.name}`;
+				});
+			}
+		}
+
 		// Make a new quoteListContainer
 		const newList = htmlToElement('<div id="quoteListContainer"></div>');
 		// Fill the quoteListContainer with quote cards using a loop
@@ -153,7 +154,6 @@ rhit.FbMovieQuotesManager = class {
 	}
 
 	beginListening(changeListener) {
-
 		let query = this._ref.orderBy(rhit.FB_KEY_LAST_TOUCHED, "desc").limit(50);
 		if (this.uid) {
 			query = query.where(rhit.FB_KEY_AUTHOR, "==", this.uid);
@@ -220,12 +220,11 @@ rhit.DetailPageController = class {
 		rhit.fbSingleQuoteManager.beginListening(this.updateView.bind(this));
 	}
 	updateView() {
-		// Begin listening for the User as well now that we know the uid
 		if (!rhit.fbUserManager.isListening) {
-			rhit.fbUserManager.beginListening(rhit.fbSingleQuoteManager.author,
+			rhit.fbUserManager.beginListening(
+				rhit.fbSingleQuoteManager.author,
 				this.updateAuthorBox.bind(this));
 		}
-
 		document.querySelector("#cardQuote").innerHTML = rhit.fbSingleQuoteManager.quote;
 		document.querySelector("#cardMovie").innerHTML = rhit.fbSingleQuoteManager.movie;
 		if (rhit.fbSingleQuoteManager.author == rhit.fbAuthManager.uid) {
@@ -236,11 +235,15 @@ rhit.DetailPageController = class {
 
 	updateAuthorBox() {
 		//console.log("Update the author box");
-		document.querySelector("#authorName").innerHTML = rhit.fbUserManager.name;
-		document.querySelector("#profilePhoto").src = rhit.fbUserManager.photoUrl;
+		if (rhit.fbUserManager.name) {
+			document.querySelector("#authorName").innerHTML = rhit.fbUserManager.name;
+		}
+		if (rhit.fbUserManager.photoUrl) {
+			document.querySelector("#profilePhoto").src = rhit.fbUserManager.photoUrl;
+		}
 		document.querySelector("#authorBox").onclick = (event) => {
 			if (rhit.fbSingleQuoteManager.author == rhit.fbAuthManager.uid) {
-				window.location.href = "profile.html";
+				window.location.href = "/profile.html";
 			} else {
 				window.location.href = `/list.html?uid=${rhit.fbSingleQuoteManager.author}`;
 			}
@@ -310,7 +313,8 @@ rhit.LoginPageController = class {
 		document.querySelector("#rosefireButton").onclick = (event) => {
 			rhit.fbAuthManager.signIn();
 		};
-		rhit.fbAuthManager.startFirebaseAuthUi();
+
+		rhit.fbAuthManager.startFirebaseUI();
 	}
 }
 
@@ -321,24 +325,17 @@ rhit.FbAuthManager = class {
 		this._photoUrl = "";
 	}
 
-	get name() {
-		return this._name || this._user.displayName;
-	}
-
-	get photoUrl() {
-		return this._photoUrl || this._user.photoURL;
-	}
-
 	beginListening(changeListener) {
 		firebase.auth().onAuthStateChanged((user) => {
 			this._user = user;
+			console.log(this._user);
 			changeListener();
 		});
 	}
 
 	signIn() {
 		console.log("Sign in using Rosefire");
-		Rosefire.signIn(rhit.ROSEFIRE_REGISTRY_TOKEN, (err, rfUser) => {
+		Rosefire.signIn("eb20b5be-d31d-40fd-b4b7-e50dee8c5bf2", (err, rfUser) => {
 			if (err) {
 				console.log("Rosefire error!", err);
 				return;
@@ -355,6 +352,7 @@ rhit.FbAuthManager = class {
 				}
 			});
 		});
+
 	}
 
 	signOut() {
@@ -363,18 +361,18 @@ rhit.FbAuthManager = class {
 		});
 	}
 
-	startFirebaseAuthUi() {
-		// Initialize the FirebaseUI Widget using Firebase.
-		var ui = new firebaseui.auth.AuthUI(firebase.auth());
-		ui.start('#firebaseui-auth-container', {
+	startFirebaseUI = function () {
+		var uiConfig = {
 			signInSuccessUrl: '/',
 			signInOptions: [
 				firebase.auth.GoogleAuthProvider.PROVIDER_ID,
 				firebase.auth.EmailAuthProvider.PROVIDER_ID,
 				firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-				firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID,
+				firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
 			],
-		});
+		};
+		const ui = new firebaseui.auth.AuthUI(firebase.auth());
+		ui.start('#firebaseui-auth-container', uiConfig);
 	}
 
 	get isSignedIn() {
@@ -384,121 +382,126 @@ rhit.FbAuthManager = class {
 	get uid() {
 		return this._user.uid;
 	}
+
+	get name() {
+		return this._name || this._user.displayName;
+	}
+
+	get photoUrl() {
+		return this._photoUrl || this._user.photoURL;
+	}
 }
 
 rhit.ProfilePageController = class {
 	constructor() {
-		// Profile page actions.
-		document.querySelector("#submitPhoto").addEventListener("click", (event) => {
-			document.querySelector("#fileInput").click();
-		});
-		document.querySelector("#fileInput").addEventListener("change", (event) => {
-			//console.log("change worked");
-			const file = event.target.files[0]
-			console.log("Selected File", file);
-			rhit.fbUserManager.uploadPhotoToStorage(file);
-		});
-		document.querySelector("#submitName").addEventListener("click", (event) => {
+		console.log("Created Profile page controller");
+
+		// Handle the two buttons.
+		document.querySelector("#submitName").onclick = (event) => {
 			const name = document.querySelector("#inputName").value;
-			console.log("name", name);
 			rhit.fbUserManager.updateName(name).then(() => {
-				window.location.href = "/list.html"
+				window.location.href = "/list.html";
 			});
+		};
+
+
+		document.querySelector("#submitPhoto").onclick = (event) => {
+			console.log("You pressed Upload photo");
+			document.querySelector("#inputFile").click();
+		};
+
+		document.querySelector("#inputFile").addEventListener("change", (event) => {
+			console.log("You selected a file");
+			const file = event.target.files[0]
+			console.log(`Received file named ${file.name}`);
+			const storageRef = firebase.storage().ref().child(rhit.fbAuthManager.uid);
+			storageRef.put(file).then((uploadTaskSnapshot) => {
+				console.log("The file has been uploaded!");
+
+				// TODO: save the download url of this photo to the Firestore
+				storageRef.getDownloadURL().then((downloadUrl) => {
+					rhit.fbUserManager.updatePhotoUrl(downloadUrl);
+				});
+			});
+			console.log("Uploading the file");
 		});
+
+
+		// Start listening for users
 		rhit.fbUserManager.beginListening(rhit.fbAuthManager.uid, this.updateView.bind(this));
 	}
-
 	updateView() {
-		console.log('rhit.fbUserManager.name :>> ', rhit.fbUserManager.name);
-		console.log('rhit.fbUserManager.photoUrl :>> ', rhit.fbUserManager.photoUrl);
-		document.querySelector("#inputName").value = rhit.fbUserManager.name;
+		if (rhit.fbUserManager.name) {
+			document.querySelector("#inputName").value = rhit.fbUserManager.name;
+		}
 		if (rhit.fbUserManager.photoUrl) {
 			document.querySelector("#profilePhoto").src = rhit.fbUserManager.photoUrl;
 		}
 	}
-
 }
 
 rhit.FbUserManager = class {
 	constructor() {
 		this._collectoinRef = firebase.firestore().collection(rhit.FB_COLLECTION_USERS);
 		this._document = null;
+		this._unsubscribe = null;
+	}
+	addNewUserMaybe(uid, name, photoUrl) {
+		// Check if the User is in Firebase already
+		const userRef = this._collectoinRef.doc(uid);
+		return userRef.get().then((doc) => {
+			if (doc.exists) {
+				console.log("User already exists:", doc.data());
+				// Do nothin there is alread a User!
+				return false;
+			} else {
+				// doc.data() will be undefined in this case
+				console.log("Creating this user!");
+				// Add a new document in collection "cities"
+				return userRef.set({
+						[rhit.FB_KEY_NAME]: name,
+						[rhit.FB_KEY_PHOTO_URL]: photoUrl,
+					})
+					.then(function () {
+						console.log("Document successfully written!");
+						return true;
+					})
+					.catch(function (error) {
+						console.error("Error writing document: ", error);
+					});
+			}
+		}).catch(function (error) {
+			console.log("Error getting document:", error);
+		});
 	}
 	beginListening(uid, changeListener) {
-		console.log("Listening for uid", uid);
 		const userRef = this._collectoinRef.doc(uid);
 		this._unsubscribe = userRef.onSnapshot((doc) => {
 			if (doc.exists) {
+				console.log("Document data:", doc.data());
 				this._document = doc;
-				console.log('doc.data() :', doc.data());
-				if (changeListener) {
-					changeListener();
-				}
+				changeListener();
 			} else {
-				console.log("This User object does not exist! (that's bad)");
+				console.log("No User!  That's bad!");
 			}
 		});
+
+	}
+	stopListening() {
+		this._unsubscribe();
 	}
 
 	get isListening() {
 		return !!this._unsubscribe;
 	}
 
-
-	stopListening() {
-		this._unsubscribe();
-	}
-
-	addNewUserMaybe(uid, name, photoUrl) {
-		// First check if the user already exists.
-		console.log("Checking User for uid = ", uid);
-		const userRef = this._collectoinRef.doc(uid);
-		return userRef.get().then((document) => {
-			if (document.exists) {
-				console.log("User already exists.  Do nothing");
-				return false; // This will be the parameter to the next .then callback function.
-			} else {
-				// We need to create this user.
-				console.log("Creating the user!");
-				return userRef.set({
-					[rhit.FB_KEY_NAME]: name,
-					[rhit.FB_KEY_PHOTO_URL]: photoUrl,
-				}).then(() => {
-					return true;
-				});
-			}
-		});
-	}
-
-	uploadPhotoToStorage(file) {
-		const metadata = {
-			"content-type": file.type
-		};
-		const storageRef = firebase.storage().ref().child(rhit.FB_COLLECTION_USERS).child(rhit.fbAuthManager.uid);
-
-		// const nextAvailableKey = firebase.storage().ref().child(rhit.FB_COLLECTION_USERS).push({}).key;
-		// const storageRef = firebase.storage().ref().child(rhit.FB_COLLECTION_USERS).child(nextAvailableKey);
-
-		storageRef.put(file, metadata).then((uploadSnapshot) => {
-			console.log("Upload is complete!", uploadSnapshot);
-
-			// Handle successful uploads on complete
-			// For instance, get the download URL: https://firebasestorage.googleapis.com/...
-			storageRef.getDownloadURL().then((downloadURL) => {
-				console.log("File available at", downloadURL);
-				rhit.fbUserManager.updatePhotoUrl(downloadURL);
-			});
-		});
-		console.log("Uploading", file.name);
-	}
-
 	updatePhotoUrl(photoUrl) {
 		const userRef = this._collectoinRef.doc(rhit.fbAuthManager.uid);
 		userRef.update({
-				[rhit.FB_KEY_PHOTO_URL]: photoUrl
+				[rhit.FB_KEY_PHOTO_URL]: photoUrl,
 			})
 			.then(() => {
-				console.log("Document successfully updated with photoUrl!");
+				console.log("Document successfully updated!");
 			})
 			.catch(function (error) {
 				console.error("Error updating document: ", error);
@@ -508,10 +511,10 @@ rhit.FbUserManager = class {
 	updateName(name) {
 		const userRef = this._collectoinRef.doc(rhit.fbAuthManager.uid);
 		return userRef.update({
-				[rhit.FB_KEY_NAME]: name
+				[rhit.FB_KEY_NAME]: name,
 			})
 			.then(() => {
-				console.log("Document successfully updated with name!");
+				console.log("Document successfully updated!");
 			})
 			.catch(function (error) {
 				console.error("Error updating document: ", error);
@@ -528,11 +531,9 @@ rhit.FbUserManager = class {
 
 rhit.checkForRedirects = function () {
 	if (document.querySelector("#loginPage") && rhit.fbAuthManager.isSignedIn) {
-		console.log("Redirect to list page");
 		window.location.href = "/list.html";
 	}
 	if (!document.querySelector("#loginPage") && !rhit.fbAuthManager.isSignedIn) {
-		console.log("Redirect to login page");
 		window.location.href = "/";
 	}
 };
@@ -567,21 +568,25 @@ rhit.initializePage = function () {
 
 rhit.createUserObjectIfNeeded = function () {
 	return new Promise((resolve, reject) => {
+		// Check if a User might be new
 		if (!rhit.fbAuthManager.isSignedIn) {
-			console.log("Nobody is signed in.  No need to check if this is a new User");
+			console.log("No user.  So no User check needed");
 			resolve(false);
 			return;
 		}
 		if (!document.querySelector("#loginPage")) {
-			console.log("We're not on the login page.  Nobody is signing in for the first time.");
+			console.log("Not on login page.  So no User check needed");
 			resolve(false);
 			return;
 		}
+		// Call addNewUserMaybe
+		console.log("Checking user");
 		rhit.fbUserManager.addNewUserMaybe(
 			rhit.fbAuthManager.uid,
 			rhit.fbAuthManager.name,
-			rhit.fbAuthManager.photoUrl).then((wasUserAdded) => {
-			resolve(wasUserAdded);
+			rhit.fbAuthManager.photoUrl
+		).then((isUserNew) => {
+			resolve(isUserNew);
 		});
 	});
 }
@@ -589,8 +594,8 @@ rhit.createUserObjectIfNeeded = function () {
 /* Main */
 rhit.main = function () {
 	console.log("Ready");
-	rhit.fbUserManager = new rhit.FbUserManager();
 	rhit.fbAuthManager = new rhit.FbAuthManager();
+	rhit.fbUserManager = new rhit.FbUserManager();
 	rhit.fbAuthManager.beginListening(() => {
 		console.log("isSignedIn = ", rhit.fbAuthManager.isSignedIn);
 		rhit.createUserObjectIfNeeded().then((isUserNew) => {
@@ -602,8 +607,23 @@ rhit.main = function () {
 			rhit.checkForRedirects();
 			rhit.initializePage();
 		});
-		console.log("This code runs before any async code returns.");
 	});
+
+	// Temp code for Read and Add
+	// const ref = firebase.firestore().collection("MovieQuotes");
+	// ref.onSnapshot((querySnapshot) => {
+	// 	querySnapshot.forEach((doc) => {
+	// 		console.log(doc.data());
+	// 	});
+	// });
+
+	// ref.add({
+	// 	quote: "My second test",
+	// 	movie: "My second movie",
+	// 	lastTouched: firebase.firestore.Timestamp.now(),
+	// });
+
+
 };
 
 rhit.main();
