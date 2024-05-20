@@ -53,16 +53,14 @@ function getElizaInitialGreeting() {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      return response.text(); // assuming the response is plain text
+      return response.text(); 
     })
     .then(serverResponse => {
-      // Use the server response to start the conversation
       rhit.conversation.push("Eliza: " + serverResponse);
       updateView();
     })
     .catch(error => {
       console.error('There was a problem with the fetch operation:', error);
-      // Fallback to default text in case of error
       let serverResponse = "Sorry, I couldn't connect to the server.";
       rhit.conversation.push("Eliza: " + serverResponse);
       updateView();
